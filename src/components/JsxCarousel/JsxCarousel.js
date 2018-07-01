@@ -1,6 +1,7 @@
 import React, { Component, PureComponent } from 'react';
 import './JsxCarousel.css';
 import Thumbnails from './Thumbnails';
+import Description from './Description';
 
 const Slide = slide => (
     <div
@@ -123,6 +124,7 @@ class JsxCarousel extends Component {
 
     render() {
         const { slides } = this.props;
+        const selected = slides[this.state.current];
 
         return (
             <div className="JsxCarousel">
@@ -140,7 +142,7 @@ class JsxCarousel extends Component {
                                     onHandleEnd={this.handleEnd}/>
                         </div>
                     </div>
-                    <div className="JsxCarousel">DESCRIPTION</div>
+                    <Description slide={selected}/>
                 </div>
                 <Thumbnails slides={slides} active={this.state.current} onSelect={this.onSlideSelect}/>/>
             </div>
