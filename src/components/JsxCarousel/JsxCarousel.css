@@ -3,12 +3,9 @@
     height: 100%;
 }
 
-.JsxCarousel__wrapper {
-    height: 80%;
-}
-
 .JsxCarousel__slider {
     white-space: nowrap;
+    overflow-x: hidden;
 }
 
 .JsxCarousel__slider__active, .JsxCarousel__slider__slides {
@@ -17,6 +14,7 @@
 
 .JsxCarousel__slider__slides {
     position: relative;
+    height: 800px;
 }
 
 .JsxCarousel__slider__slides__inner {
@@ -26,9 +24,9 @@
 
 .JsxCarousel__Slide {
     display: inline-block;
-    width: 600px;
-    height: 400px;
-    background-size: contain;
+    width: 1000px;
+    height: 800px;
+    margin: 0 10px;
 }
 
 .JsxCarousel__thumbnails {
@@ -47,9 +45,6 @@
 .JsxCarousel__thumbnails__thumbnail div {
     height: 100%;
     width: 100%;
-    background-size: contain;
-    background-position: center center;
-    background-repeat: no-repeat;
 }
 
 .JsxCarousel__thumbnails__thumbnail.active div {

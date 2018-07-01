@@ -104,7 +104,7 @@ class JsxCarousel extends Component {
         if ( !this.state.inMotion )
             return;
 
-        if ( this.state.left < 200 )
+        if ( this.state.left < -300 )
             this.animateToNext();
         else
             this.setState({
