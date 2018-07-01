@@ -15,10 +15,20 @@
     display: inline-block;
 }
 
+.JsxCarousel__slider__slides {
+    position: relative;
+}
+
+.JsxCarousel__slider__slides__inner {
+    position: absolute;
+    left: 0;
+}
+
 .JsxCarousel__Slide {
     display: inline-block;
     width: 600px;
     height: 400px;
+    background-size: contain;
 }
 
 .JsxCarousel__thumbnails {
@@ -34,14 +44,12 @@
     width: 100px;
 }
 
-.JsxCarousel__thumbnails__thumbnail {
-    height: 150px;
-    width: 100px;
-}
-
 .JsxCarousel__thumbnails__thumbnail div {
     height: 100%;
     width: 100%;
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
 }
 
 .JsxCarousel__thumbnails__thumbnail.active div {
