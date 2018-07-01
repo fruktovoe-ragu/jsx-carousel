@@ -2,11 +2,8 @@ import React, { Component, PureComponent } from 'react';
 import './JsxCarousel.css';
 import Thumbnails from './Thumbnails';
 import Description from './Description';
-
-const Slide = slide => (
-    <div
-        className="JsxCarousel__Slide"
-        style={{ background: `url(${slide.url})` }}/>);
+import Slide from './Slide';
+import ActiveSlide from './ActiveSlide';
 
 class Slides extends PureComponent {
 
@@ -101,7 +98,7 @@ class JsxCarousel extends Component {
 
     animateToNext = () => {
         const next = (this.state.current + 1) % this.props.slides.length;
-        this.setState(state => ({ current: next, left: 0, initialX: null, inMotion: false }));
+        this.setState({ current: next, left: 0, initialX: null, inMotion: false });
     };
 
     animateSlidingToZero = () => {
@@ -130,9 +127,7 @@ class JsxCarousel extends Component {
             <div className="JsxCarousel">
                 <div className="JsxCarousel__wrapper">
                     <div className="JsxCarousel__slider">
-                        <div className="JsxCarousel__slider__active">
-                            <Slide {...slides[this.state.current]}/>
-                        </div>
+                        <ActiveSlide slide={selected}/>
                         <div className="JsxCarousel__slider__slides">
                             <Slides slides={slides}
                                     ix={this.state.current}
