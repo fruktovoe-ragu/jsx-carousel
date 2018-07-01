@@ -79,7 +79,13 @@ class JsxCarousel extends Component {
         if ( !this.state.inMotion )
             return;
 
-        this.setState(state => ({ left: clientX - state.initialX }));
+        let x = clientX - this.state.initialX;
+
+        if ( x < 0 )
+            this.setState({ left: x });
+
+        if ( x < -800 )
+            this.handleEnd();
     };
 
     handleEnd = () => {
@@ -126,7 +132,7 @@ class JsxCarousel extends Component {
         return (
             <div className="JsxCarousel">
                 <div className="JsxCarousel__wrapper">
-                    <div className="JsxCarousel__slider">
+                    <div className="JsxCarousel__slider" onMouseLeave={this.handleEnd}>
                         <ActiveSlide slide={selected}/>
                         <div className="JsxCarousel__slider__slides">
                             <Slides slides={slides}
