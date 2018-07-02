@@ -1,31 +1,12 @@
-import React, { Component, PureComponent } from 'react';
+import React, { Component } from 'react';
 import './JsxCarousel.css';
 import Thumbnails from './Thumbnails';
 import Description from './Description';
 import Slide from './Slide';
 import ActiveSlide from './ActiveSlide';
+import Slides from './Slides';
 
 const PrevSlide = ({ slide }) => <div className="JsxCarousel__slider__prev">{slide.el}</div>;
-
-class Slides extends PureComponent {
-
-    render() {
-        const { slides, ix } = this.props;
-        const list = [...slides];
-
-        for (let i = 0; i <= ix; i++) {
-            const img = list.shift();
-            list.push(img);
-        }
-
-        return (
-            <div className="JsxCarousel__slider__slides"
-                 style={{ transform: `translateX(${this.props.transform}px)` }}
-            >{list.map(it => it.el)}</div>
-        );
-    }
-
-}
 
 class JsxCarousel extends Component {
     state = {
@@ -148,7 +129,7 @@ class JsxCarousel extends Component {
                          onMouseLeave={this.handleMouseLeave}
                     >
                         <PrevSlide slide={prev}/>
-                        <ActiveSlide slide={selected} transform={left > 0 ? left : 0}/>
+                        <ActiveSlide slide={selected} transform={left}/>
                         <Slides slides={slides} ix={current} transform={left}/>
                     </div>
                     <Description slide={selected}/>
