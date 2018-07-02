@@ -7,34 +7,6 @@ import ActiveSlide from './ActiveSlide';
 
 class Slides extends PureComponent {
 
-    handleTouchStart = (touchStartEvent) => {
-        touchStartEvent.preventDefault();
-        this.props.onMotionStart(touchStartEvent.targetTouches[0].clientX);
-    };
-
-    handleTouchMove = (touchMoveEvent) => {
-        this.props.onHandleMove(touchMoveEvent.targetTouches[0].clientX);
-    };
-
-    handleTouchEnd = () => {
-        this.props.onHandleEnd();
-    };
-
-    handleMouseDown = (mouseDownEvent) => {
-        mouseDownEvent.preventDefault();
-        this.props.onMotionStart(mouseDownEvent.clientX);
-    };
-
-    handleMouseMove = (mouseMoveEvent) => {
-        this.props.onHandleMove(mouseMoveEvent.clientX);
-    };
-
-    handleMouseUp = () => {
-        this.props.onHandleEnd();
-    };
-
-    handleMouseLeave = () => this.handleMouseUp();
-
     render() {
         const { slides, ix } = this.props;
         const list = [...slides];
@@ -45,16 +17,9 @@ class Slides extends PureComponent {
         }
 
         return (
-            <div className="JsxCarousel__slider__slides__inner"
+            <div className="JsxCarousel__slider__slides"
                  style={{ transform: `translateX(${this.props.left}px)` }}
-                 onTouchStart={this.handleTouchStart}
-                 onTouchMove={this.handleTouchMove}
-                 onTouchEnd={this.handleTouchEnd}
-                 onMouseDown={this.handleMouseDown}
-                 onMouseMove={this.handleMouseMove}
-                 onMouseUp={this.handleMouseUp}
-                 onMouseLeave={this.handleMouseLeave}
-            >{list.map(it => <Slide key={it.url} {...it}/>)}</div>
+            >{list.map(it => it.el)}</div>
         );
     }
 
@@ -68,6 +33,10 @@ class JsxCarousel extends Component {
         inMotion: false,
         timer: null
     };
+
+    componentWillMount() {
+        this.props.slides.forEach(it => it.el = <Slide key={it.url} {...it}/>)
+    }
 
     onSlideSelect = ix => this.setState({ current: ix });
 
@@ -125,6 +94,34 @@ class JsxCarousel extends Component {
         this.setState({ left });
     };
 
+    handleTouchStart = (touchStartEvent) => {
+        touchStartEvent.preventDefault();
+        this.handleMotionStart(touchStartEvent.targetTouches[0].clientX);
+    };
+
+    handleTouchMove = (touchMoveEvent) => {
+        this.handleMove(touchMoveEvent.targetTouches[0].clientX);
+    };
+
+    handleTouchEnd = () => {
+        this.handleEnd();
+    };
+
+    handleMouseDown = (mouseDownEvent) => {
+        mouseDownEvent.preventDefault();
+        this.handleMotionStart(mouseDownEvent.clientX);
+    };
+
+    handleMouseMove = (mouseMoveEvent) => {
+        this.handleMove(mouseMoveEvent.clientX);
+    };
+
+    handleMouseUp = () => {
+        this.handleEnd();
+    };
+
+    handleMouseLeave = () => this.handleMouseUp();
+
     render() {
         const { slides } = this.props;
         const selected = slides[this.state.current];
@@ -132,16 +129,17 @@ class JsxCarousel extends Component {
         return (
             <div className="JsxCarousel">
                 <div className="JsxCarousel__wrapper">
-                    <div className="JsxCarousel__slider" onMouseLeave={this.handleEnd}>
+                    <div className="JsxCarousel__slider"
+                         onTouchStart={this.handleTouchStart}
+                         onTouchMove={this.handleTouchMove}
+                         onTouchEnd={this.handleTouchEnd}
+                         onMouseDown={this.handleMouseDown}
+                         onMouseMove={this.handleMouseMove}
+                         onMouseUp={this.handleMouseUp}
+                         onMouseLeave={this.handleMouseLeave}
+                    >
                         <ActiveSlide slide={selected}/>
-                        <div className="JsxCarousel__slider__slides">
-                            <Slides slides={slides}
-                                    ix={this.state.current}
-                                    left={this.state.left}
-                                    onMotionStart={this.handleMotionStart}
-                                    onHandleMove={this.handleMove}
-                                    onHandleEnd={this.handleEnd}/>
-                        </div>
+                        <Slides slides={slides} ix={this.state.current} left={this.state.left}/>
                     </div>
                     <Description slide={selected}/>
                 </div>
