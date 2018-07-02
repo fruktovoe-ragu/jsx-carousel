@@ -4,12 +4,19 @@
 }
 
 .JsxCarousel__slider {
+    position: relative;
     white-space: nowrap;
     overflow-x: hidden;
 }
 
 .JsxCarousel__slider__active, .JsxCarousel__slider__slides {
     display: inline-block;
+}
+
+.JsxCarousel__slider__prev {
+    position: absolute;
+    left: 0;
+    top: 0;
 }
 
 .JsxCarousel__Slide {

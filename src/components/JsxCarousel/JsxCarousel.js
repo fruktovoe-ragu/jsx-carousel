@@ -5,6 +5,8 @@ import Description from './Description';
 import Slide from './Slide';
 import ActiveSlide from './ActiveSlide';
 
+const PrevSlide = ({ slide }) => <div className="JsxCarousel__slider__prev">{slide.el}</div>;
+
 class Slides extends PureComponent {
 
     render() {
@@ -18,7 +20,7 @@ class Slides extends PureComponent {
 
         return (
             <div className="JsxCarousel__slider__slides"
-                 style={{ transform: `translateX(${this.props.left}px)` }}
+                 style={{ transform: `translateX(${this.props.transform}px)` }}
             >{list.map(it => it.el)}</div>
         );
     }
@@ -48,10 +50,8 @@ class JsxCarousel extends Component {
         if ( !this.state.inMotion )
             return;
 
-        let x = clientX - this.state.initialX;
-
-        if ( x < 0 )
-            this.setState({ left: x });
+        const x = clientX - this.state.initialX;
+        this.setState({ left: x });
 
         if ( x < -800 )
             this.handleEnd();
@@ -63,6 +63,8 @@ class JsxCarousel extends Component {
 
         if ( this.state.left < -300 )
             this.animateToNext();
+        else if ( this.state.left > 300 )
+            this.animateToPrev();
         else
             this.setState({
                 initialX: null,
@@ -74,6 +76,11 @@ class JsxCarousel extends Component {
     animateToNext = () => {
         const next = (this.state.current + 1) % this.props.slides.length;
         this.setState({ current: next, left: 0, initialX: null, inMotion: false });
+    };
+
+    animateToPrev = () => {
+        const prev = this.state.current === 0 ? this.props.slides.length - 1 : this.state.current - 1;
+        this.setState({ current: prev, left: 0, initialX: null, inMotion: false });
     };
 
     animateSlidingToZero = () => {
@@ -124,7 +131,9 @@ class JsxCarousel extends Component {
 
     render() {
         const { slides } = this.props;
-        const selected = slides[this.state.current];
+        const { current, left } = this.state;
+        const selected = slides[current];
+        const prev = slides[current === 0 ? slides.length - 1 : current - 1];
 
         return (
             <div className="JsxCarousel">
@@ -138,12 +147,13 @@ class JsxCarousel extends Component {
                          onMouseUp={this.handleMouseUp}
                          onMouseLeave={this.handleMouseLeave}
                     >
-                        <ActiveSlide slide={selected}/>
-                        <Slides slides={slides} ix={this.state.current} left={this.state.left}/>
+                        <PrevSlide slide={prev}/>
+                        <ActiveSlide slide={selected} transform={left > 0 ? left : 0}/>
+                        <Slides slides={slides} ix={current} transform={left}/>
                     </div>
                     <Description slide={selected}/>
                 </div>
-                <Thumbnails slides={slides} active={this.state.current} onSelect={this.onSlideSelect}/>
+                <Thumbnails slides={slides} active={current} onSelect={this.onSlideSelect}/>
             </div>
         );
     }
