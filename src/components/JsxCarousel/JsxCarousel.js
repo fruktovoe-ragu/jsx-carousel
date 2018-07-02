@@ -46,7 +46,7 @@ class Slides extends PureComponent {
 
         return (
             <div className="JsxCarousel__slider__slides__inner"
-                 style={{ left: `${this.props.left}px` }}
+                 style={{ transform: `translateX(${this.props.left}px)` }}
                  onTouchStart={this.handleTouchStart}
                  onTouchMove={this.handleTouchMove}
                  onTouchEnd={this.handleTouchEnd}
@@ -145,7 +145,7 @@ class JsxCarousel extends Component {
                     </div>
                     <Description slide={selected}/>
                 </div>
-                <Thumbnails slides={slides} active={this.state.current} onSelect={this.onSlideSelect}/>/>
+                <Thumbnails slides={slides} active={this.state.current} onSelect={this.onSlideSelect}/>
             </div>
         );
     }

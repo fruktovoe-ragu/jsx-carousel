@@ -12,25 +12,11 @@
     display: inline-block;
 }
 
-.JsxCarousel__slider__slides {
-    position: relative;
-    height: 800px;
-}
-
-.JsxCarousel__slider__slides__inner {
-    position: absolute;
-    left: 0;
-}
-
 .JsxCarousel__Slide {
     display: inline-block;
     width: 1000px;
     height: 800px;
     margin: 0 10px;
-}
-
-.JsxCarousel__thumbnails {
-    height: 20%;
 }
 
 .JsxCarousel__thumbnails li {
@@ -40,6 +26,7 @@
 .JsxCarousel__thumbnails__thumbnail {
     height: 150px;
     width: 100px;
+    margin: 0 10px;
 }
 
 .JsxCarousel__thumbnails__thumbnail div {
