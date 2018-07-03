@@ -82,12 +82,13 @@ class JsxCarousel extends Component {
         });
     };
 
-    animateTo = (dst, next) => {
+    animateTo = (dst, next, t = 900) => {
         return () => {
             let { left } = this.state;
+            const path = Math.abs(dst - left);
             window.cancelAnimationFrame(this.state.animation);
 
-            if (dst === left || Math.abs(dst - left) < this.velocity || (dst < 0 && left <= dst) || (dst > 0 && left >= dst)) {
+            if (dst === left || path < this.velocity || (dst < 0 && left <= dst) || (dst > 0 && left >= dst)) {
                 this.setState({
                     current: next,
                     left: 0,
@@ -98,13 +99,13 @@ class JsxCarousel extends Component {
                 return;
             }
 
-            let velocity = this.velocity * (left > dst ? -1 : 1);
+            let velocity = (this.velocity * path / t) * (left > dst ? -1 : 1);
 
             this.setState({
                 left: left + velocity,
                 inMotion: false,
                 initialX: null,
-                animation: window.requestAnimationFrame(this.animateTo(dst, next))
+                animation: window.requestAnimationFrame(this.animateTo(dst, next, ++t))
             });
         }
     };
