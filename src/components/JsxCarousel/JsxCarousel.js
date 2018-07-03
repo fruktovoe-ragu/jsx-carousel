@@ -86,7 +86,9 @@ class JsxCarousel extends Component {
         return () => {
             let { left } = this.state;
             const path = Math.abs(dst - left);
-            window.cancelAnimationFrame(this.state.animation);
+
+            if (this.state.animation)
+                window.cancelAnimationFrame(this.state.animation);
 
             if (dst === left || path < this.velocity || (dst < 0 && left <= dst) || (dst > 0 && left >= dst)) {
                 this.setState({
@@ -162,7 +164,7 @@ class JsxCarousel extends Component {
                     </div>
                     <Description slide={selected}/>
                 </div>
-                <Thumbnails slides={slides} active={current} onSelect={this.onSlideSelect}/>
+                <Thumbnails slides={slides} active={current} onSelect={ix => this.animateTo(-1 * this.width, ix)()}/>
             </div>
         );
     }
