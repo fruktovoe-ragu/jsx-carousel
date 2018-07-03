@@ -14,6 +14,7 @@ class Slides extends PureComponent {
         return (
             <div className="JsxCarousel__slider__slides"
                  style={{ transform: `translateX(${this.props.transform}px)` }}
+                 onClick={this.props.onClick}
             >{list.map(it => it.el)}</div>
         );
     }

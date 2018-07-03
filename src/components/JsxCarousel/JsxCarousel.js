@@ -9,6 +9,8 @@ import Slides from './Slides';
 const PrevSlide = ({ slide }) => <div className="JsxCarousel__slider__prev">{slide.el}</div>;
 
 class JsxCarousel extends Component {
+    velocity = 40;
+    width = 10;
     state = {
         current: 0,
         left: 0,
@@ -21,6 +23,11 @@ class JsxCarousel extends Component {
         this.props.slides.forEach(it => it.el = <Slide key={it.url} {...it}/>)
     }
 
+    componentDidMount() {
+        const slide = document.querySelector('.JsxCarousel__Slide');
+        this.width = slide.offsetWidth;
+    }
+
     onSlideSelect = ix => this.setState({ current: ix });
 
     handleMotionStart = (clientX) => {
@@ -28,23 +35,23 @@ class JsxCarousel extends Component {
     };
 
     handleMove = (clientX) => {
-        if ( !this.state.inMotion )
+        if (!this.state.inMotion)
             return;
 
         const x = clientX - this.state.initialX;
         this.setState({ left: x });
 
-        if ( x < -800 )
+        if (x < (-.8 * this.width))
             this.handleEnd();
     };
 
     handleEnd = () => {
-        if ( !this.state.inMotion )
+        if (!this.state.inMotion)
             return;
 
-        if ( this.state.left < -300 )
+        if (this.state.left < (this.width * -.3))
             this.animateToNext();
-        else if ( this.state.left > 300 )
+        else if (this.state.left > (this.width * .3))
             this.animateToPrev();
         else
             this.setState({
@@ -56,30 +63,51 @@ class JsxCarousel extends Component {
 
     animateToNext = () => {
         const next = (this.state.current + 1) % this.props.slides.length;
-        this.setState({ current: next, left: 0, initialX: null, inMotion: false });
+        window.requestAnimationFrame(this.animateTo((-1 * this.width), next));
     };
 
     animateToPrev = () => {
         const prev = this.state.current === 0 ? this.props.slides.length - 1 : this.state.current - 1;
-        this.setState({ current: prev, left: 0, initialX: null, inMotion: false });
+        window.requestAnimationFrame(this.animateTo(this.width, prev));
     };
 
     animateSlidingToZero = () => {
-        const velocity = 30;
-        let left = this.state.left;
+        let { left, timer } = this.state;
 
-        if ( left > (-1 * velocity) && left < velocity ) {
-            window.clearInterval(this.state.timer);
+        if (left > (-1 * this.velocity) && left < this.velocity) {
+            window.clearInterval(timer);
             this.setState({ left: 0, timer: null });
             return;
         }
 
-        if ( left < 0.01 )
-            left += velocity;
+        if (left < 0.01)
+            left += this.velocity;
         else
-            left -= velocity;
+            left -= this.velocity;
 
         this.setState({ left });
+    };
+
+    animateTo = (dst, next) => {
+        return () => {
+            let { left } = this.state;
+
+            if (left <= dst) {
+                this.setState({
+                    current: next,
+                    left: 0,
+                    initialX: null,
+                    inMotion: false
+                });
+                return;
+            }
+
+            this.setState({
+                left: left - this.velocity,
+                inMotion: false,
+                initialX: null
+            }, () => window.requestAnimationFrame(this.animateTo(dst, next)));
+        }
     };
 
     handleTouchStart = (touchStartEvent) => {
@@ -130,7 +158,7 @@ class JsxCarousel extends Component {
                     >
                         <PrevSlide slide={prev}/>
                         <ActiveSlide slide={selected} transform={left}/>
-                        <Slides slides={slides} ix={current} transform={left}/>
+                        <Slides slides={slides} ix={current} transform={left} onClick={this.animateToNext}/>
                     </div>
                     <Description slide={selected}/>
                 </div>
