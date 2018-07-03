@@ -16,7 +16,7 @@ class JsxCarousel extends Component {
         left: 0,
         initialX: null,
         inMotion: false,
-        timer: null
+        animation: null
     };
 
     componentWillMount() {
@@ -28,10 +28,12 @@ class JsxCarousel extends Component {
         this.width = slide.offsetWidth;
     }
 
-    onSlideSelect = ix => this.setState({ current: ix });
+    onSlideSelect = ix => this.setState({
+        current: (ix === 0 ? this.props.slides.length - 1 : ix - 1)
+    }, this.animateToNext);
 
     handleMotionStart = (clientX) => {
-        this.setState({ initialX: clientX, inMotion: true });
+        this.timeout = window.setTimeout(() => this.setState({ initialX: clientX, inMotion: true }), 300);
     };
 
     handleMove = (clientX) => {
@@ -46,6 +48,11 @@ class JsxCarousel extends Component {
     };
 
     handleEnd = () => {
+        if (this.timeout) {
+            window.clearTimeout(this.timeout);
+            this.timeout = null;
+        }
+
         if (!this.state.inMotion)
             return;
 
@@ -57,56 +64,48 @@ class JsxCarousel extends Component {
             this.setState({
                 initialX: null,
                 inMotion: false,
-                timer: window.setInterval(this.animateSlidingToZero, 33)
+                animation: window.requestAnimationFrame(this.animateTo(0, this.state.current))
             });
     };
 
     animateToNext = () => {
         const next = (this.state.current + 1) % this.props.slides.length;
-        window.requestAnimationFrame(this.animateTo((-1 * this.width), next));
+        this.setState({
+            animation: window.requestAnimationFrame(this.animateTo((-1 * this.width), next))
+        });
     };
 
     animateToPrev = () => {
         const prev = this.state.current === 0 ? this.props.slides.length - 1 : this.state.current - 1;
-        window.requestAnimationFrame(this.animateTo(this.width, prev));
-    };
-
-    animateSlidingToZero = () => {
-        let { left, timer } = this.state;
-
-        if (left > (-1 * this.velocity) && left < this.velocity) {
-            window.clearInterval(timer);
-            this.setState({ left: 0, timer: null });
-            return;
-        }
-
-        if (left < 0.01)
-            left += this.velocity;
-        else
-            left -= this.velocity;
-
-        this.setState({ left });
+        this.setState({
+            animation: window.requestAnimationFrame(this.animateTo(this.width, prev))
+        });
     };
 
     animateTo = (dst, next) => {
         return () => {
             let { left } = this.state;
+            window.cancelAnimationFrame(this.state.animation);
 
-            if (left <= dst) {
+            if (dst === left || Math.abs(dst - left) < this.velocity || (dst < 0 && left <= dst) || (dst > 0 && left >= dst)) {
                 this.setState({
                     current: next,
                     left: 0,
                     initialX: null,
-                    inMotion: false
+                    inMotion: false,
+                    animation: null
                 });
                 return;
             }
 
+            let velocity = this.velocity * (left > dst ? -1 : 1);
+
             this.setState({
-                left: left - this.velocity,
+                left: left + velocity,
                 inMotion: false,
-                initialX: null
-            }, () => window.requestAnimationFrame(this.animateTo(dst, next)));
+                initialX: null,
+                animation: window.requestAnimationFrame(this.animateTo(dst, next))
+            });
         }
     };
 
