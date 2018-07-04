@@ -90,7 +90,7 @@ class JsxCarousel extends Component {
             if (this.state.animation)
                 window.cancelAnimationFrame(this.state.animation);
 
-            if (dst === left || path < this.velocity || (dst < 0 && left <= dst) || (dst > 0 && left >= dst)) {
+            if (dst === left || path < (this.velocity / 10) || (dst < 0 && left <= dst) || (dst > 0 && left >= dst)) {
                 this.setState({
                     current: next,
                     left: 0,
@@ -101,7 +101,7 @@ class JsxCarousel extends Component {
                 return;
             }
 
-            let velocity = (this.velocity * path / t) * (left > dst ? -1 : 1);
+            let velocity = Math.max(this.velocity * path / t, 5) * (left > dst ? -1 : 1);
 
             this.setState({
                 left: left + velocity,
