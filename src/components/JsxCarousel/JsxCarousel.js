@@ -6,7 +6,7 @@ import Slide from './Slide';
 import ActiveSlide from './ActiveSlide';
 import Slides from './Slides';
 
-const PrevSlide = ({ slide }) => <div className="JsxCarousel__slider__prev">{slide.el}</div>;
+const PrevSlide = ({ slide }) => <div className="JsxCarousel__slider__prev JsxCarousel__slide-container">{slide.el}</div>;
 
 class JsxCarousel extends Component {
     velocity = 40;
@@ -147,25 +147,38 @@ class JsxCarousel extends Component {
         const prev = slides[current === 0 ? slides.length - 1 : current - 1];
 
         return (
+          <div className="section-winners">
             <div className="JsxCarousel">
-                <div className="JsxCarousel__wrapper">
-                    <div className="JsxCarousel__slider"
-                         onTouchStart={this.handleTouchStart}
-                         onTouchMove={this.handleTouchMove}
-                         onTouchEnd={this.handleTouchEnd}
-                         onMouseDown={this.handleMouseDown}
-                         onMouseMove={this.handleMouseMove}
-                         onMouseUp={this.handleMouseUp}
-                         onMouseLeave={this.handleMouseLeave}
-                    >
-                        <PrevSlide slide={prev}/>
-                        <ActiveSlide slide={selected} transform={left}/>
-                        <Slides slides={slides} ix={current} transform={left} onClick={this.animateToNext}/>
-                    </div>
-                    <Description slide={selected}/>
+              <div className="JsxCarousel__wrapper">
+                <div className="container-large">
+                  <div
+                    className="JsxCarousel__slider"
+                    onTouchStart={this.handleTouchStart}
+                    onTouchMove={this.handleTouchMove}
+                    onTouchEnd={this.handleTouchEnd}
+                    onMouseDown={this.handleMouseDown}
+                    onMouseMove={this.handleMouseMove}
+                    onMouseUp={this.handleMouseUp}
+                    onMouseLeave={this.handleMouseLeave}
+                  >
+                    <PrevSlide slide={prev} />
+                    <ActiveSlide slide={selected} transform={left} />
+                    <Slides slides={slides} ix={current} transform={left} onClick={this.animateToNext} />
+                  </div>
                 </div>
-                <Thumbnails slides={slides} active={current} onSelect={ix => this.animateTo(-1 * this.width, ix)()}/>
+                <div className="container">
+                  <div className="indent">
+                    <Description slide={selected} />
+                  </div>
+                </div>
+              </div>
+              <div className="container">
+                <div className="indent">
+                  <Thumbnails slides={slides} active={current} onSelect={ix => this.animateTo(-1 * this.width, ix)()} />
+                </div>
+              </div>
             </div>
+          </div>
         );
     }
 
