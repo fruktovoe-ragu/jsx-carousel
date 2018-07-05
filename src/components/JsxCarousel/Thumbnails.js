@@ -1,9 +1,13 @@
 import React from 'react';
 
 const Thumbnail = ({ slide, isActive, onSelect }) => (
-    <li className={'JsxCarousel__thumbnails__thumbnail' + (isActive ? ' active' : '')}>
-        <div style={{ background: `url(${slide.thumbnail})` }}
-             onClick={onSelect}/>
+    <li className={'JsxCarousel__thumbnail' + (isActive ? ' active' : '')}>
+        <div
+          className="JsxCarousel__thumbnail-img"
+          style=a{{ backgroundImage: `url(${slide.thumbnail})` }}
+          onClick={onSelect}
+        />
+        <div className={"JsxCarousel__thumbnail-text"}>{slide.description.team}</div>
     </li>
 );
 
