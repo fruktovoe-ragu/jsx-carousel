@@ -148,6 +148,11 @@ class JsxCarousel extends Component {
 
         return (
           <div className="section-winners">
+            <div className="container">
+              <div className="indent">
+                <div className="h1 winners-title">Winners</div>
+              </div>
+            </div>
             <div className="JsxCarousel">
               <div className="JsxCarousel__wrapper">
                 <div className="container-large">
